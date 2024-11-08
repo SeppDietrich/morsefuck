@@ -8,15 +8,37 @@
 <body>
     <audio id="audioCapture"></audio>
 
-    <button onclick=showArr();>
-        start microphone 
-    </button>
+    <div class="text" id="sp">
+
+
+    </div>
+    <div class="code" id="sf">
+
+
+    </div>
 
     <p style="font-size: 42pt;">
         
     </p>
 
+<style>
+.text{
+  font-size: 40px;
+position: absolute;
+top: 50%;
+right: 50%;
 
+}
+.code{
+  font-size: 40px;
+position: absolute;
+top: 35%;
+right: 50%;
+
+
+}
+
+</style>
 <script type="text/javascript">
 
 
@@ -73,7 +95,9 @@ function showArr(){
     console.log(code);
 }
 
-    
+let text =document.getElementById("sp");
+let mcode =document.getElementById("sf");
+
 var audioCapture = (function ()
 {
     navigator.mediaDevices.getUserMedia({
@@ -118,21 +142,25 @@ var audioCapture = (function ()
                 code+=".";
 
             }
-            console.log(comparesound);
+            mcode.innerText=code;
+            console.log(comparesound.length);
             comparesound=[];
         }
         if(code[code.length-1]=='s'){
           console.log("Wordmade "+ code);
           
           let str =code.substring(0, code.length-1);
-          if(str==undefined){
+          if(guide.get(str)==undefined){
             finalStr+=" ";
           }else{
             finalStr+=guide.get(str);
           }
+          
           code="";
           console.log(finalStr);
-
+          text.innerText=finalStr;
+          
+          
         }
       
     };
