@@ -6,6 +6,15 @@
     <title></title>
 </head>
 <body>
+<h1 style="position: absolute;width: 100vw; right: -40%; top: 3vh;">Volume sensitivety</h1>
+  <div class="slide-box">
+    
+
+  <input type="range" min="0" max="50" value="20" id="sens">
+  <div class="nr" id="nr">
+      20
+    </div>
+  </div>
     <audio id="audioCapture"></audio>
 
     <div class="text" id="sp">
@@ -22,6 +31,13 @@
     </p>
 
 <style>
+.slide-box{
+  display: flex;
+  position: absolute;
+  top: 10%;
+  justify-content: center;
+  width: 100vw;
+}
 .text{
   font-size: 40px;
 position: absolute;
@@ -94,17 +110,37 @@ const guide = new Map([
 function showArr(){
     console.log(code);
 }
+function tranformCode(code){
+   let str =code.substring(0, code.length-1);
+          if(guide.get(str)==undefined){
+            finalStr+=" ";
+          }else{
+            finalStr+=guide.get(str);
+          }
+          
+          code="";
+          console.log(finalStr);
+          text.innerText=finalStr; 
+          mcode.innerText=code;
+        
+}
 
 let text =document.getElementById("sp");
 let mcode =document.getElementById("sf");
+let sens =document.getElementById("sens");
+let sensv=document.getElementById("nr")
 
 var audioCapture = (function ()
 {
+
     navigator.mediaDevices.getUserMedia({
   audio: true,
   video: false
 })
   .then(function(stream) {
+
+
+
     const audioContext = new AudioContext();
     const analyser = audioContext.createAnalyser();
     const microphone = audioContext.createMediaStreamSource(stream);
@@ -121,9 +157,10 @@ var audioCapture = (function ()
       analyser.getByteFrequencyData(array);
       const arraySum = array.reduce((a, value) => a + value, 0);
       const average = arraySum / array.length;
-      
-        if(Math.round(average)>=30){
+      sensv.innerText=sens.value
+        if(Math.round(average)>=sens.value){
             tVsound.push(Math.round(average));
+            
         }else{
             comparesound=tVsound;
             tVsound=[]
@@ -147,22 +184,13 @@ var audioCapture = (function ()
             comparesound=[];
         }
         if(code[code.length-1]=='s'){
-          console.log("Wordmade "+ code);
-          
-          let str =code.substring(0, code.length-1);
-          if(guide.get(str)==undefined){
-            finalStr+=" ";
-          }else{
-            finalStr+=guide.get(str);
-          }
-          
+          tranformCode(code);
           code="";
-          console.log(finalStr);
-          text.innerText=finalStr;
-          
-          
-        }
-      
+       }else if(code.length>=5){
+        code+='s'
+        tranformCode(code);
+        code="";
+       }
     };
   })
   .catch(function(err) {
